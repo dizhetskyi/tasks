@@ -19,6 +19,7 @@ app.use(require("webpack-dev-middleware")(compiler, {
 app.use(require("webpack-hot-middleware")(compiler));
 
 
+app.use('/bower', express.static(path.resolve(__dirname + '/bower_components/')));
 app.use('/libs', express.static(path.resolve(__dirname + '/node_modules/')));
 
 app.use(express.static(path.resolve(__dirname + '/public/')));

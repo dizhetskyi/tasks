@@ -3,14 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <title>Tasks</title>
+
+  <link rel="stylesheet" href="/libs/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+  
 </head>
 <body ng-app="app">
 
-  <a href="#/">Home</a>
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#/">Tasks</a>
+      </div>
+  
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav">
+          <!-- <li><a href="#/">Index</a></li>
+          <li><a href="#/task">New</a></li> -->
+        </ul>
+      </div><!-- /.navbar-collapse -->
 
-  <br>
-
+    </div>
+  </nav>
+  
   <div ng-view></div>
+  
+
+  <script src="/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/bower/tinymce-dist/tinymce.js"></script>
 
   <script src="/static/bundle.js"></script>
 

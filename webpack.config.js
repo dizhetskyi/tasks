@@ -4,6 +4,8 @@ var path = require('path');
 var autoprefixer = require('autoprefixer');
 var precss = require('precss');
 
+console.log(path.resolve(__dirname));
+
 module.exports = {
 
   entry: [
@@ -33,7 +35,7 @@ module.exports = {
       }
     ]
   },
-
+  
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin()

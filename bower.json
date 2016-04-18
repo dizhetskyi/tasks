@@ -1,0 +1,23 @@
+{
+  "name": "tasks",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "dizhetskyi <dizhetskyi@corevalue.net>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/dizhetskyi/tasks",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ui-tinymce": "^0.0.15"
+  },
+  "devDependencies": {
+    "angular-ui-tinymce": "^0.0.15"
+  }
+}
