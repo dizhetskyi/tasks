@@ -1,3 +1,5 @@
+import angular from 'angular';
+
 class IndexController {
 
   constructor($scope, tasksService){
@@ -8,6 +10,8 @@ class IndexController {
 
     this.loadTasks();
 
+    this.searchText = '';
+
     this.levelLabel = {
       1: 'For dummies',
       2: 'Your mom can do it',
@@ -16,21 +20,11 @@ class IndexController {
       5: 'Super hard'
     }
 
-    this.perPageOptions = [{
-      value: 2,
-      label: 2
-    }, {
-      value: 5,
-      label: 5
-    }]
-
     this.pagination = {
       page: 1,
       pages: 0,
-      perPage: this.perPageOptions[0].value
+      perPage: 5
     }
-
-    this.$scope.$watch(() => this.pagination.perPage, this.onPerPageChange.bind(this))
 
     this.orderProp = null;
     this.orderReversed = false;
@@ -41,7 +35,7 @@ class IndexController {
     this.tasksService.getAllTasks()
       .then(res => {
         this.tasks = res.data;
-        this.resetPagination();
+        this.recalcPagination();
         this.loading = false;
       })
       .catch(err => {
@@ -50,16 +44,24 @@ class IndexController {
       })
   }
 
-  removeTask(id){
+  removeTask($event, id){
+
+    var $btn = angular.element($event.currentTarget);
+
+    $btn.button('loading');
+
     if (confirm(`Remove task?`)){
       this.tasksService.removeTask(id)
         .then(res => {
           if (res.data.success){
             this.tasks = this.tasks.filter(t => t._id !== id);
+            this.recalcPagination();
           }
+          $btn.button('reset');
         })
         .catch(err => {
           console.log(err);
+          $btn.button('reset');
         })
     }
   }
@@ -73,22 +75,11 @@ class IndexController {
     }
   }
 
-  resetPagination(){
-    this.pagination = Object.assign({}, this.pagination, {
-      page: 1,
-      pages: Math.ceil(this.tasks.length / this.pagination.perPage)
-    })
-  }
-
-  onPerPageChange(perPage){
-    if (perPage){
-      this.pagination = Object.assign({}, this.pagination, {
-        perPage: perPage,
-        page: 1,
-        pages: Math.ceil(this.tasks.length / perPage)
-      })
+  recalcPagination(){
+    this.pagination.pages = Math.ceil(this.tasks.length / this.pagination.perPage);
+    if (this.pagination.page > this.pagination.pages){
+      this.setPaginationPage(this.pagination.pages);
     }
-    
   }
 
   setPaginationPage(page){

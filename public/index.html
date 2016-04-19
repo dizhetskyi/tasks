@@ -4,9 +4,15 @@
   <meta charset="UTF-8">
   <title>Tasks</title>
 
+  <style>
+    [ng-cloak] {
+      display: none !important;
+    }
+  </style>
+  
   <link rel="stylesheet" href="/libs/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
-  
+
 </head>
 <body ng-app="app">
 
@@ -26,14 +32,18 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav">
-          <!-- <li><a href="#/">Index</a></li>
-          <li><a href="#/task">New</a></li> -->
+          <li><a href="#/">Tasks</a></li>
+          <li><a href="#/task">New</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right" ng-controller="AuthController as vm">
+          <li ng-cloak ng-if="!vm.isAuthenticated"><a href="" ng-click="vm.authenticate('github')"><i class="fa fa-github"></i> Auth via GitHub</a></li>
+          <li ng-cloak ng-if="vm.isAuthenticated"><a href="" ng-click="vm.logout()"><i class="fa fa-sign-out"></i> Logout ({{vm.displayName}})</a></li>
         </ul>
       </div><!-- /.navbar-collapse -->
 
     </div>
   </nav>
-  
+
   <div ng-view></div>
   
 

@@ -3,7 +3,11 @@ class TaskService {
     this.$http = $http;
   }
   getAllTasks() {
-    return this.$http.get(`http://localhost:8888/api/tasks`);
+    return this.$http.get(`http://localhost:8888/api/tasks`, {
+      headers: {
+        skipAuthorization: true
+      }
+    });
   }
 
   createTask(data){

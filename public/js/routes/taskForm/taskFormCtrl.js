@@ -1,3 +1,5 @@
+import slug from 'slug';
+
 class TaskForm {
 
   constructor($scope, tasksService, $route, $routeParams){
@@ -11,6 +13,8 @@ class TaskForm {
       this.loading = true;
       this.loadModel($routeParams.slug);
     }
+
+    this.formData = {};
 
   }
 
@@ -28,27 +32,53 @@ class TaskForm {
 
   formSubmitHandler(e){
 
-    if (this.isNew){
-      this.tasksService.createTask({ task: this.serialize() })
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
-        })
+    if (this.task.$valid){
+
+      if (this.isNew){
+        this.tasksService.createTask({ task: this.serialize() })
+          .then(res => {
+            if (res.data.success){
+              this.formData = {};
+              this.task.$setPristine();
+              alert(`Task «${res.data.doc.title}» added successfully`);
+            } else {
+              alert('invalid');
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      } else {
+        console.log(this.formData._id);
+        this.tasksService.updateTask(this.formData._id, { task: this.serialize() })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      }
+
     } else {
-      console.log(this.formData._id);
-      this.tasksService.updateTask(this.formData._id, { task: this.serialize() })
-        .then(res => {
-          console.log(res);
-        })
-        .catch(err => {
-          console.log(err);
-        })
+
+      alert('invalid');
+
     }
     
     
 
+  }
+
+  generateSlug(){
+    if (typeof this.formData.title !== 'undefined' && this.formData.title.length > 0) {
+      this.formData.slug = slug(this.formData.title).toLowerCase();
+    }
+  }
+
+  formatSlug(){
+    if (typeof this.formData.slug !== 'undefined' && this.formData.slug.length > 0) {
+      this.formData.slug = slug(this.formData.slug).toLowerCase();
+    }
   }
 
   serialize(){

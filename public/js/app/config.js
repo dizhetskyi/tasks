@@ -1,6 +1,6 @@
-config.$inject = ['$routeProvider'];
+config.$inject = ['$routeProvider', '$authProvider'];
 
-function config($routeProvider) {
+function config($routeProvider, $authProvider) {
   $routeProvider
     .when('/', {
       controller: 'IndexController as vm',
@@ -23,6 +23,12 @@ function config($routeProvider) {
     .otherwise({
       redirectTo: '/'
     })
+
+
+  $authProvider.github({
+    clientId: 'e7037ffd60cfd5c102ff',
+    url: 'http://localhost:8888/auth/github'
+  });
 }
 
 export default config;

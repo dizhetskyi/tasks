@@ -20,10 +20,16 @@ module.exports = {
     db.Task.create(req.body.task, (err, doc) => {
       if (err) {
         console.log(err);
-        res.sendStatus(500);
+        res.json({
+          success: false,
+          errors: err
+        });
       }
 
-      res.json(doc);
+      res.json({
+        success: true,
+        doc: doc
+      });
     })
 
   },
@@ -46,7 +52,7 @@ module.exports = {
   updateTask: (req, res) => {
 
     var update = Object.assign({}, req.body.task, {
-      'date_updated': Date.now()
+      date_updated: Date.now()
     })
 
     db.Task.findByIdAndUpdate(req.params.id, update, { new: true }, (err, doc) => {

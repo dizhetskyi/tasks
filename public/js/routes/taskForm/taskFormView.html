@@ -6,49 +6,80 @@
 
   <div class="row" ng-if="!vm.loading">
 
-    <form class="col-lg-8" ng-submit="vm.formSubmitHandler();">
+    <form name="vm.task" class="col-lg-8" ng-submit="vm.formSubmitHandler();" novalidate autocomplete="off">
       
-      <div class="form-group">
+      <div class="form-group" ng-class="{ 'has-error': !vm.task.title.$pristine && !vm.task.title.$valid  }">
+        
         <label>Title</label>
-        <input type="text" class="form-control" ng-model="vm.formData.title">
+        
+        <input type="text" class="form-control" ng-model="vm.formData.title" name="title" required>
+        
+        <div ng-messages="vm.task.title.$error" role="alert" class="help-block">
+          <div ng-message="required">* Required field</div>
+        </div>
+
       </div>
 
-      <div class="form-group">
-        <label>Slug</label>
+      <div class="form-group" ng-class="{ 'has-error': !vm.task.slug.$pristine && !vm.task.slug.$valid  }">
+        
+        <label>
+          Slug 
+          <button type="button" ng-click="vm.generateSlug()" class="btn btn-xs btn-link">
+            generate <i class="fa fa-cog"></i>
+          </button>
+        </label>
+
         <div class="input-group">
           <span class="input-group-addon">#/task/</span>
-          <input type="text" class="form-control" ng-model="vm.formData.slug">
+          <input type="text" class="form-control" ng-model="vm.formData.slug" ng-change="vm.formatSlug()" name="slug" required>
         </div>
+        
+        <div ng-messages="vm.task.slug.$error" role="alert" class="help-block">
+          <div ng-message="required">* Required field</div>
+        </div>
+
       </div>
 
-      <div class="form-group">
+      <div class="form-group" ng-class="{ 'has-error': !vm.task.content.$pristine && !vm.task.content.$valid  }">
+        
         <label>Content</label>
-        <textarea ui-tinymce ng-model="vm.formData.content"></textarea>
+        
+        <textarea ui-tinymce ng-model="vm.formData.content" name="content" required></textarea>
+        
+        <div ng-messages="vm.task.content.$error" role="alert" class="help-block">
+          <div ng-message="required">* Required field</div>
+        </div>
+
       </div>
 
-      <div class="form-group">
+      <div class="form-group" ng-class="{ 'has-error': !vm.task.repository_link.$pristine && !vm.task.repository_link.$valid  }">
+
         <label>Repository link</label>
-        <input type="text" class="form-control" ng-model="vm.formData.repository_link">
+
+        <input type="url" class="form-control" ng-model="vm.formData.repository_link" name="repository_link">
+        
+        <div ng-messages="vm.task.repository_link.$error" role="alert" class="help-block">
+          <div ng-message="url">not valid URL</div>
+        </div>
+
       </div>
 
       <div class="form-group">
         <label>Level</label>
-        <select class="form-control" ng-model="vm.formData.level">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-        </select>
+        <select class="form-control" ng-model="vm.formData.level" ng-init="vm.formData.level = vm.formData.level || 1" ng-options="item as item for item in [1,2,3,4,5]" name="level"></select>
       </div>
 
       <div class="form-group">
         <label>Tips</label>
-        <textarea ui-tinymce ng-model="vm.formData.tips"></textarea>
+        <textarea ui-tinymce ng-model="vm.formData.tips" name="tips"></textarea>
       </div>
 
       <br>
 
       <div class="form-group">
-        <button type="submit" class="btn btn-default btn-lg">Save</button>
+        <button type="submit" class="btn btn-default btn-lg" ng-disabled="vm.task.$invalid">Save</button>
+        &nbsp;
+        <span class="alert alert-warning" ng-show="vm.task.$invalid"><i class="fa fa-exclamation-triangle"></i> Form contains errors, please review</span>
       </div>
 
     </form>

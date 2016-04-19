@@ -19,8 +19,8 @@
   <div ng-if="!vm.loading">
 
     <div class="clearfix">
-
-      <nav class="pull-left" ng-show="vm.pagination.pages > 1">
+      
+      <nav ng-show="vm.pagination.pages > 1">        
         <ul class="pagination">
           <li ng-repeat="a in vm.range(vm.pagination.pages) track by $index" ng-class="{active: $index === vm.pagination.page - 1}" >
             <a href="" ng-click="vm.setPaginationPage($index + 1)">{{$index + 1}}</a>
@@ -28,11 +28,10 @@
         </ul>
       </nav>
 
-      <div class="pull-right">
-        <select ng-model="vm.pagination.perPage" ng-options="option.value as option.label for option in vm.perPageOptions"></select>
-      </div>
-
     </div>
+
+    <input type="text" class="form-control input-lg" ng-model="vm.search.title" placeholder="search by title">
+    <br>
 
     <table class="table">
       <thead>
@@ -55,7 +54,7 @@
           <th></th>
         </tr>
       </thead>
-      <tr ng-repeat="task in vm.tasks | orderBy : vm.orderProp : vm.orderReversed | limitTo : vm.pagination.perPage : (vm.pagination.page - 1) * vm.pagination.perPage track by $index">
+      <tr ng-repeat="task in vm.tasks | filter : vm.search | orderBy : vm.orderProp : vm.orderReversed | limitTo : vm.pagination.perPage : (vm.pagination.page - 1) * vm.pagination.perPage track by $index">
         <td style="font-size: 16px;">
           <a ng-href="#/task/{{task.slug}}">{{task.title}}</a>
         </td>
@@ -65,12 +64,12 @@
           </span>
         </td>
         <td>
-          <a class="btn btn-default btn-xs" ng-if="task.repository_link" href="{{task.repository_link}}" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+          <a class="btn btn-default btn-xs" ng-if="task.repository_link" href="{{task.repository_link}}" target="_blank" title="{{task.repository_link}}" tooltip><i class="fa fa-github fa-2x"></i></a>
         </td>
         <td class="text-right">
           <a class="btn btn-xs btn-info" ng-href="#/task/{{task.slug}}/edit"><i class="fa fa-pencil"></i> Update</a>
           &nbsp;
-          <a class="btn btn-xs btn-danger" ng-click="vm.removeTask(task._id)"><i class="fa fa-remove"></i> Remove</a>
+          <a class="btn btn-xs btn-danger" ng-click="vm.removeTask($event, task._id)"><i class="fa fa-remove"></i> Remove</a>
         </td>
       </tr>
     </table>

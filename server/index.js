@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 
+const fetch = require('isomorphic-fetch');
+
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -10,9 +12,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 var allowCrossDomain = function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:8275');
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, skipAuthorization, Authorization');
   next();
 }
 
@@ -28,8 +30,8 @@ const db = require('./db/config');
 mongoose.connect(db.uri);
 
 
+// api
 const apiRouter = express.Router();
-
 const tasksAPI = require('./db/handlers/tasks');
 
 apiRouter.route('/tasks')
@@ -44,3 +46,14 @@ apiRouter.route('/tasks/:id')
   .delete(tasksAPI.removeTask)
 
 app.use('/api', apiRouter);
+
+
+// auth
+const authRouter = express.Router();
+const authAPI = require('./db/handlers/auth');
+
+authRouter.route('/github')
+  .get(authAPI.githubAuth)
+  .post(authAPI.githubAuth)
+
+app.use('/auth', authRouter);
