@@ -1,17 +1,19 @@
 const http = require('http');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
 const db = require('./../config');
 
-const jwt = require('jsonwebtoken');
 
 module.exports = {
 
   githubAuth: (req, res) => {
 
-    const client_id = 'e7037ffd60cfd5c102ff';
-    const client_secret = '4ee8fd0af026dcd9ce572efcfb8145e1b4ffc4ec';
+    const client_id = req.app.get('githubClientId');
+    const client_secret = req.app.get('githubSecret');
     const code = req.body.code;
 
-    const secret = 'adasdsada11'
+    const secret = req.app.get('secret');
 
     fetch(`https://github.com/login/oauth/access_token`, {
       method: 'POST',
@@ -26,22 +28,49 @@ module.exports = {
       })
     })
       .then(result => result.json())
-      .then(json => {
+      .then(github_token => {
 
-        fetch(`https://api.github.com/user?access_token=${json.access_token}`)
+        fetch(`https://api.github.com/user?access_token=${github_token.access_token}`)
           .then(result2 => result2.json())
-          .then(json2 => {
+          .then(githubUser => {
 
-            var token = jwt.sign({
-              username: json2.name,
-              token: json.access_token
-            }, secret, {
-              expiresIn: 120
-            });
+            db.User.findOne({githubId: githubUser.id}, (err, userDoc)=>{
 
-            res.json({
-              token: token
-            })
+              if (userDoc === null) {
+
+                db.User.create({
+                  email: githubUser.email,
+                  githubId: githubUser.id,
+                  login: githubUser.login,
+                  firstname: githubUser.name.split(' ')[0],
+                  lastname: githubUser.name.split(' ')[1]
+                }, (err, createdUser) => {
+                  var token = jwt.sign({
+                    login: createdUser.login,
+                    firstname: createdUser.firstname,
+                    lastname: createdUser.lastname
+                  }, secret, {
+                    expiresIn: 120
+                  });
+                  res.json({
+                    token: token
+                  })
+                })
+
+              } else {
+                var token = jwt.sign({
+                  login: userDoc.login,
+                  firstname: userDoc.firstname,
+                  lastname: userDoc.lastname
+                }, secret, {
+                  expiresIn: 120
+                });
+                res.json({
+                  token: token
+                })
+              }
+
+            })            
 
           })
         

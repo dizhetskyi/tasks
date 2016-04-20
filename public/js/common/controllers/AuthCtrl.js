@@ -1,6 +1,6 @@
 class AuthController {
 
-  constructor($scope, $auth, $cookieStore){
+  constructor($scope, $auth, $route){
 
     this.$scope = $scope;
     this.$auth = $auth;
@@ -8,26 +8,31 @@ class AuthController {
     this.isAuthenticated = this.$auth.isAuthenticated();
 
     if (this.isAuthenticated){
-      this.displayName = this.$auth.getPayload().username;
+      this.displayName = this.$auth.getPayload().login;
     }
+
+    console.log($route);
 
   }
 
-  authenticate(provider){
+  authenticate($event, provider){
+    this.authInProgress = true;
     this.$auth.authenticate(provider)
       .then(res => {
-        this.isAuthenticated = this.$auth.isAuthenticated();
-        this.displayName = res.data.username;
+        this.isAuthenticated = true;
+        this.displayName = this.$auth.getPayload().login;
+        this.authInProgress = false;
       });    
   }
 
   logout(){
     this.$auth.logout();
     this.isAuthenticated = false;
+
   }
 
 }
 
-AuthController.$inject = ['$scope', '$auth', '$cookieStore']
+AuthController.$inject = ['$scope', '$auth', '$route']
 
 export default AuthController;

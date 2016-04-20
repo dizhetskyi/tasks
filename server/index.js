@@ -8,6 +8,10 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 8888;
 
+const settings = require('./appSetiings');
+
+settings.applyToApp(app);
+
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
