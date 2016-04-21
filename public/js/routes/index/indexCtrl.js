@@ -10,7 +10,13 @@ class IndexController {
 
     this.loadTasks();
 
-    this.searchText = '';
+    this.search = {
+      title: undefined,
+      tags: undefined,
+      level: undefined
+    }
+
+    this.maxLevel = false;
 
     this.levelLabel = {
       1: 'For dummies',
@@ -28,6 +34,7 @@ class IndexController {
 
     this.orderProp = null;
     this.orderReversed = false;
+
   }
 
   loadTasks(){
@@ -75,6 +82,13 @@ class IndexController {
     }
   }
 
+  setTagFilter(newTag){
+    console.log(newTag);
+    if (newTag !== this.search.tags){
+      this.search.tags = newTag;
+    }
+  }
+
   recalcPagination(){
     this.pagination.pages = Math.ceil(this.tasks.length / this.pagination.perPage);
     if (this.pagination.page > this.pagination.pages){
@@ -88,6 +102,14 @@ class IndexController {
 
   range(n){
     return new Array(n);
+  }
+
+  visibleTasks(){
+    if (typeof this.search.level === 'undefined') return 1;
+    var count = this.tasks.reduce((c, t) => {
+      return t.level === parseInt(this.search.level) ? c + 1 : c;
+    }, 0)
+    return count;
   }
 
 }

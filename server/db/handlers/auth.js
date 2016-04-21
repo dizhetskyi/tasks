@@ -1,6 +1,6 @@
 const http = require('http');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+//const bcrypt = require('bcrypt');
 
 const db = require('./../config');
 
@@ -42,39 +42,44 @@ module.exports = {
                   email: githubUser.email,
                   githubId: githubUser.id,
                   login: githubUser.login,
-                  firstname: githubUser.name.split(' ')[0],
-                  lastname: githubUser.name.split(' ')[1]
+                  firstname: githubUser.name && githubUser.name.split(' ')[0],
+                  lastname: githubUser.name && githubUser.name.split(' ')[1]
                 }, (err, createdUser) => {
+
                   var token = jwt.sign({
                     login: createdUser.login,
                     firstname: createdUser.firstname,
                     lastname: createdUser.lastname
                   }, secret, {
-                    expiresIn: 120
+                    expiresIn: 360
                   });
+
                   res.json({
                     token: token
                   })
+
                 })
 
               } else {
+
                 var token = jwt.sign({
                   login: userDoc.login,
                   firstname: userDoc.firstname,
                   lastname: userDoc.lastname
                 }, secret, {
-                  expiresIn: 120
+                  expiresIn: 360
                 });
+
                 res.json({
                   token: token
                 })
               }
 
-            })            
+            })
 
           })
-        
-        
+
+
 
       })
 

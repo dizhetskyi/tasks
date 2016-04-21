@@ -2,19 +2,24 @@ const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
   title: {
-    type: String
+    type: String,
+    require: true
   },
   slug: {
-    type: String
+    type: String,
+    required: true
   },
   content: {
-    type: String
+    type: String,
+    require: true
   },
   repository_link: {
     type: String
   },
   level: {
-    type: Number
+    type: Number,
+    require: true,
+    default: 1
   },
   tips: [
     {
@@ -28,6 +33,14 @@ const taskSchema = new mongoose.Schema({
   date_updated: {
     type: Date,
     default: Date.now
+  },
+  tags: [
+    {
+      type: String
+    }
+  ],
+  sandbox_link: {
+    type: String
   }
 })
 

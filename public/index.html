@@ -9,9 +9,12 @@
       display: none !important;
     }
   </style>
-  
+
   <link rel="stylesheet" href="/libs/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+  <link rel="stylesheet" type="text/css" href="/libs/ng-tags-input/build/ng-tags-input.min.css">
+  <link rel="stylesheet" type="text/css" href="/libs/ng-tags-input/build/ng-tags-input.bootstrap.min.css">
 
 </head>
 <body ng-app="app" ng-controller="AuthController as auth">
@@ -28,7 +31,7 @@
         </button>
         <a class="navbar-brand" href="#/">Tasks</a>
       </div>
-  
+
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav">
@@ -58,7 +61,7 @@
   </nav>
 
   <div ng-view></div>
-  
+
 
   <script src="/libs/jquery/dist/jquery.min.js"></script>
   <script src="/libs/bootstrap/dist/js/bootstrap.min.js"></script>
