@@ -1,9 +1,13 @@
 class AuthController {
 
-  constructor($scope, $auth, $route){
+  constructor($scope, $auth, $route, $location){
+
+    console.log('init');
 
     this.$scope = $scope;
     this.$auth = $auth;
+    this.$route = $route;
+    this.$location = $location;
 
     this.isAuthenticated = this.$auth.isAuthenticated();
 
@@ -11,7 +15,11 @@ class AuthController {
       this.displayName = this.$auth.getPayload().login;
     }
 
-    console.log($route);
+    this.$scope.$on('$routeChangeStart', (scope, next, current) => {
+
+      this.checkPermissions(next);      
+
+    })
 
   }
 
@@ -22,6 +30,13 @@ class AuthController {
         this.isAuthenticated = true;
         this.displayName = this.$auth.getPayload().login;
         this.authInProgress = false;
+
+        if (this.$route.current.params.redirectTo){
+          this.$location.url(this.$route.current.params.redirectTo);
+        } else {
+          this.checkPermissions(this.$route.current);
+        }
+        
       });    
   }
 
@@ -29,10 +44,45 @@ class AuthController {
     this.$auth.logout();
     this.isAuthenticated = false;
 
+    this.checkPermissions(this.$route.current);
+
+  }
+
+  onForbiddenRoute(route){
+    let url = '/login';
+
+    url += '?redirectTo=' + encodeURIComponent(route.$$route.originalPath);
+
+    this.$location.url(url);
+  }
+
+  onPermissiveRoute(){
+    this.$location.url('/');    
+  }
+
+  checkPermissions(route){
+
+    const { permissions, originalPath } = route.$$route;
+
+    if (permissions){
+      Object.keys(permissions).forEach((key) => {
+        
+        if (key === 'loggedIn'){
+          if (permissions[key] === true){
+            if (!this.isAuthenticated) this.onForbiddenRoute(route);
+          } else {
+            if (this.isAuthenticated) this.onPermissiveRoute();
+          }
+        } else if (key === 'a'){
+
+        }
+
+      })
+    }
   }
 
 }
 
-AuthController.$inject = ['$scope', '$auth', '$route']
+AuthController.$inject = ['$scope', '$auth', '$route', '$location']
 
 export default AuthController;

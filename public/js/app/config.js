@@ -1,5 +1,3 @@
-config.$inject = ['$httpProvider', '$routeProvider', '$authProvider'];
-
 function config($httpProvider, $routeProvider, $authProvider) {
 
   // $httpProvider.interceptors.push(function($q) {
@@ -21,20 +19,17 @@ function config($httpProvider, $routeProvider, $authProvider) {
     })
     .when('/protected', {
       template: 'protected url',
-      resolve: {
-        isLoggedIn: ['$auth', '$location', function($auth, $location) {
-          if (!$auth.isAuthenticated()){
-            $location.path('/');
-            return false;
-          }
-          return true;
-        }]
+      permissions: {
+        loggedIn: true
       }
     })
     .when('/newTask', {
       controller: 'TaskFormController as vm',
       templateUrl: '/js/routes/taskForm/taskFormView.html',
-      isNewModel: true
+      isNewModel: true,
+      permissions: {
+        loggedIn: true
+      }
     })
     .when('/task/:slug', {
       controller: 'TaskController as vm',
@@ -45,8 +40,20 @@ function config($httpProvider, $routeProvider, $authProvider) {
       templateUrl: '/js/routes/taskForm/taskFormView.html',
       isNewModel: false
     })
+    .when('/login', {
+      templateUrl: '/js/routes/login/loginView.html',
+      permissions: {
+        loggedIn: false
+      }
+    })
+    .when('/login?redirectTo=:redirectTo', {
+      templateUrl: '/js/routes/login/loginView.html',
+      permissions: {
+        loggedIn: false
+      }
+    })
     .otherwise({
-      redirectTo: '/'
+      //redirectTo: '/'
     })
 
 
@@ -55,5 +62,7 @@ function config($httpProvider, $routeProvider, $authProvider) {
     url: 'http://localhost:8888/auth/github'
   });
 }
+
+config.$inject = ['$httpProvider', '$routeProvider', '$authProvider'];
 
 export default config;
