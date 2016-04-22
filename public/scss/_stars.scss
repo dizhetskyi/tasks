@@ -10,7 +10,7 @@
   vertical-align: middle;
 }
 .star-cb-group * {
-  font-size: 24px;
+  font-size: 18px;
 }
 .star-cb-group > input {
   display: none;
@@ -23,17 +23,24 @@
   width: 1em;
   white-space: nowrap;
   cursor: pointer;
+  padding: 0;
+  margin: 0;
 }
 .star-cb-group > input + label:before {
   display: inline-block;
   text-indent: -9999px;
-  content: "☆";
-  color: #888;
+  content: "\f006";
+  color: #aaa;
+  font-family: FontAwesome;
+  font-weight: normal;
+  cursor: pointer;
 }
-.star-cb-group > input:checked ~ label:before, .star-cb-group > input + label:hover ~ label:before, .star-cb-group > input + label:hover:before {
-  content: "★";
-  color: #e52;
-  text-shadow: 0 0 1px #333;
+
+.star-cb-group > input:checked ~ label:before, 
+.star-cb-group > input + label:hover ~ label:before, 
+.star-cb-group > input + label:hover:before {
+  content: "\f005";
+  color: gold;
 }
 .star-cb-group > .star-cb-clear + label {
   text-indent: -9999px;
@@ -44,12 +51,39 @@
   width: .5em;
 }
 .star-cb-group:hover > input + label:before {
-  content: "☆";
-  color: #888;
-  text-shadow: none;
+  content: "\f006";
+  color: #aaa;
 }
-.star-cb-group:hover > input + label:hover ~ label:before, .star-cb-group:hover > input + label:hover:before {
-  content: "★";
-  color: #e52;
-  text-shadow: 0 0 1px #333;
+.star-cb-group:hover > input + label:hover ~ label:before {
+  content: "\f005";
+  color: gold;
+}
+.star-cb-group:hover > input + label:hover:before {
+  content: "\f005";
+  color: gray;
+}
+
+.star-cb-group.only-one > input:checked + label:before {
+  color: gold;
+}
+
+.star-cb-group.only-one > input:checked + label ~ label:before {
+  color: #aaa;
+  content: "\f006";
+}
+
+.star-cb-group.only-one:hover > input + label:before,
+.star-cb-group.only-one:hover > input + label ~ label:before {
+  color: #aaa;
+  content: "\f006";
+}
+
+.star-cb-group.only-one:hover > input:checked + label:before {
+  color: gold;
+  content: "\f005";
+}
+
+.star-cb-group.only-one:hover > input + label:hover:before {
+  color: gray;
+  content: "\f005";
 }

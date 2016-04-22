@@ -38,7 +38,10 @@ function config($httpProvider, $routeProvider, $authProvider) {
     .when('/task/:slug/edit', {
       controller: 'TaskFormController as vm',
       templateUrl: '/js/routes/taskForm/taskFormView.html',
-      isNewModel: false
+      isNewModel: false,
+      permissions: {
+        loggedIn: true
+      }
     })
     .when('/login', {
       templateUrl: '/js/routes/login/loginView.html',

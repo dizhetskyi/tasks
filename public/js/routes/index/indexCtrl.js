@@ -8,15 +8,15 @@ class IndexController {
 
     this.tasks = [];
 
+    this.tags = [];
+    
     this.loadTasks();
 
     this.search = {
-      title: undefined,
-      tags: undefined,
-      level: undefined
+      title: undefined
     }
 
-    this.maxLevel = false;
+    this.maxLevel = true;
 
     this.levelLabel = {
       1: 'For dummies',
@@ -44,11 +44,34 @@ class IndexController {
         this.tasks = res.data;
         this.recalcPagination();
         this.loading = false;
+        this.extractTags();
       })
       .catch(err => {
         this.loading = false;
         console.log(err);
       })
+  }
+
+  extractTags(){
+    this.tags = this.tasks.reduce((tags, task) => {
+      let newTags = tags;
+      task.tags.forEach(tag => {
+        if (newTags.indexOf(tag) === -1) newTags.push(tag)
+      })
+      return newTags;
+    }, []).map(t => { return {label: t, selected: false}})
+  }
+
+  activeTags(){
+    return this.tags.reduce((count, tag) => {
+      return tag.selected ? count + 1 : count;
+    }, 0)
+  }
+
+  resetTags(){
+    this.tags.forEach(t => {
+      t.selected = false;
+    })
   }
 
   removeTask($event, id){
@@ -102,14 +125,6 @@ class IndexController {
 
   range(n){
     return new Array(n);
-  }
-
-  visibleTasks(){
-    if (typeof this.search.level === 'undefined') return 1;
-    var count = this.tasks.reduce((c, t) => {
-      return t.level === parseInt(this.search.level) ? c + 1 : c;
-    }, 0)
-    return count;
   }
 
 }

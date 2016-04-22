@@ -12,6 +12,7 @@ import config from './app/config';
 import controllers from './app/controllers';
 import services from './app/services';
 import directives from './app/directives';
+import filters from './app/filters';
 
 import UITinyMCE from 'angular-ui-tinymce';
 
@@ -25,7 +26,8 @@ const app = angular.module('app', [
   'ngTagsInput',
   controllers,
   services,
-  directives
+  directives,
+  filters
 ]);
 
 app.config(config);
