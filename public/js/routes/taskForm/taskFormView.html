@@ -1,19 +1,19 @@
 <div class="container">
 
-  <h2>New task</h2>
+  <h2>New task <i ng-if="vm.loading" class="fa fa-spin fa-spinner"></i></h2>
 
   <br>
 
   <div class="row" ng-if="!vm.loading">
 
     <form name="vm.task" class="col-lg-8" ng-submit="vm.formSubmitHandler();" novalidate autocomplete="off">
-      
+
       <div class="form-group" ng-class="{ 'has-error': !vm.task.title.$pristine && !vm.task.title.$valid  }">
-        
+
         <label>Title</label>
-        
+
         <input type="text" class="form-control" ng-model="vm.formData.title" name="title" required>
-        
+
         <div ng-messages="vm.task.title.$error" role="alert" class="help-block">
           <div ng-message="required">* Required field</div>
         </div>
@@ -21,9 +21,9 @@
       </div>
 
       <div class="form-group" ng-class="{ 'has-error': !vm.task.slug.$pristine && !vm.task.slug.$valid  }">
-        
+
         <label>
-          Slug 
+          Slug
           <button type="button" ng-click="vm.generateSlug()" class="btn btn-xs btn-link">
             generate <i class="fa fa-cog"></i>
           </button>
@@ -33,7 +33,7 @@
           <span class="input-group-addon">#/task/</span>
           <input type="text" class="form-control" ng-model="vm.formData.slug" ng-change="vm.formatSlug()" name="slug" required>
         </div>
-        
+
         <div ng-messages="vm.task.slug.$error" role="alert" class="help-block">
           <div ng-message="required">* Required field</div>
         </div>
@@ -41,13 +41,31 @@
       </div>
 
       <div class="form-group" ng-class="{ 'has-error': !vm.task.content.$pristine && !vm.task.content.$valid  }">
-        
+
         <label>Content</label>
-        
+
         <textarea ui-tinymce ng-model="vm.formData.content" name="content" required></textarea>
-        
+
         <div ng-messages="vm.task.content.$error" role="alert" class="help-block">
           <div ng-message="required">* Required field</div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+
+        <tags-input ng-model="vm.formData.tags"></tags-input>
+
+      </div>
+
+      <div class="form-group" ng-class="{ 'has-error': !vm.task.sandbox_link.$pristine && !vm.task.sandbox_link.$valid  }">
+
+        <label>Sandbox link</label>
+
+        <input type="url" class="form-control" ng-model="vm.formData.sandbox_link" name="sandbox_link">
+
+        <div ng-messages="vm.task.sandbox_link.$error" role="alert" class="help-block">
+          <div ng-message="url">not valid URL</div>
         </div>
 
       </div>
@@ -57,7 +75,7 @@
         <label>Repository link</label>
 
         <input type="url" class="form-control" ng-model="vm.formData.repository_link" name="repository_link">
-        
+
         <div ng-messages="vm.task.repository_link.$error" role="alert" class="help-block">
           <div ng-message="url">not valid URL</div>
         </div>

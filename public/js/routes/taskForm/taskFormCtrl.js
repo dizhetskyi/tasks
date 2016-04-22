@@ -3,7 +3,7 @@ import slug from 'slug';
 class TaskForm {
 
   constructor($scope, tasksService, $route, $routeParams){
-    
+
     this.$scope = $scope;
     this.tasksService = tasksService;
 
@@ -49,7 +49,7 @@ class TaskForm {
             console.log(err);
           })
       } else {
-        console.log(this.formData._id);
+
         this.tasksService.updateTask(this.formData._id, { task: this.serialize() })
           .then(res => {
             console.log(res);
@@ -64,8 +64,8 @@ class TaskForm {
       alert('invalid');
 
     }
-    
-    
+
+
 
   }
 
@@ -89,7 +89,9 @@ class TaskForm {
       content: this.formData.content,
       level: this.formData.level,
       repository_link: this.formData.repository_link,
-      tips: this.formData.tips
+      tips: this.formData.tips,
+      tags: this.formData.tags && this.formData.tags.map(t => t.text),
+      sandbox_link: this.formData.sandbox_link
     };
 
   }

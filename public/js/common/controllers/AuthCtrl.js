@@ -2,8 +2,6 @@ class AuthController {
 
   constructor($scope, $auth, $route, $location){
 
-    console.log('init');
-
     this.$scope = $scope;
     this.$auth = $auth;
     this.$route = $route;
@@ -16,9 +14,7 @@ class AuthController {
     }
 
     this.$scope.$on('$routeChangeStart', (scope, next, current) => {
-
-      this.checkPermissions(next);      
-
+      this.checkPermissions(next);
     })
 
   }
@@ -36,8 +32,8 @@ class AuthController {
         } else {
           this.checkPermissions(this.$route.current);
         }
-        
-      });    
+
+      });
   }
 
   logout(){
@@ -57,24 +53,22 @@ class AuthController {
   }
 
   onPermissiveRoute(){
-    this.$location.url('/');    
+    this.$location.url('/');
   }
 
   checkPermissions(route){
 
-    const { permissions, originalPath } = route.$$route;
+    const { permissions } = route.$$route;
 
     if (permissions){
       Object.keys(permissions).forEach((key) => {
-        
+
         if (key === 'loggedIn'){
           if (permissions[key] === true){
             if (!this.isAuthenticated) this.onForbiddenRoute(route);
           } else {
             if (this.isAuthenticated) this.onPermissiveRoute();
           }
-        } else if (key === 'a'){
-
         }
 
       })

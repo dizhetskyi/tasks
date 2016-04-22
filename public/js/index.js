@@ -1,9 +1,12 @@
+import styles from '../scss/main.scss';
+
 import angular from 'angular';
 import router from 'angular-route';
 import sanitizer from 'angular-sanitize';
 import messages from 'angular-messages';
 import cookies from 'angular-cookies';
 import satellizer from 'satellizer';
+import ngTagsInput from 'ng-tags-input';
 
 import config from './app/config';
 import controllers from './app/controllers';
@@ -19,7 +22,8 @@ const app = angular.module('app', [
   messages,
   cookies,
   satellizer,
-  controllers, 
+  'ngTagsInput',
+  controllers,
   services,
   directives
 ]);

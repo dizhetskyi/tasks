@@ -4,6 +4,8 @@
   </div>
   <div ng-if="!vm.loading">
     <h2>{{vm.taskModel.title}}</h2>
+    <a target="_blank" class="btn btn-info btn-sm" ng-if="vm.taskModel.sandbox_link" ng-href="{{vm.taskModel.sandbox_link}}" style="font-size: 1.5em;"><i class="fa fa-bicycle"></i> Start solving</a>
+    <br>
     <br>
     <div ng-bind-html="vm.taskModel.content"></div>
   </div>

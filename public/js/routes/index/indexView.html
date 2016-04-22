@@ -1,5 +1,5 @@
 <div class="container">
-  
+
   <div class="clearfix">
     <h3 class="pull-left">Tasks list</h3>
     <div class="pull-right">
@@ -19,8 +19,8 @@
   <div ng-if="!vm.loading">
 
     <div class="clearfix">
-      
-      <nav ng-show="vm.pagination.pages > 1">        
+
+      <nav ng-show="vm.pagination.pages > 1">
         <ul class="pagination">
           <li ng-repeat="a in vm.range(vm.pagination.pages) track by $index" ng-class="{active: $index === vm.pagination.page - 1}" >
             <a href="" ng-click="vm.setPaginationPage($index + 1)">{{$index + 1}}</a>
@@ -33,11 +33,33 @@
     <input type="text" class="form-control input-lg" ng-model="vm.search.title" placeholder="search by title">
     <br>
 
-    <table class="table">
+    <div ng-if="vm.search.tags">
+      Filter by tag: <a href="" class="btn btn-default" ng-click="vm.search.tags = undefined">{{vm.search.tags}} <i class="fa fa-remove text-danger"></i></a>
+    </div>
+
+    <div>
+      <!-- Сложность: &nbsp; -->
+      <!-- <span class="checkbox" style="display: inline-block;"><label><input type="checkbox" ng-model="vm.maxLevel">Не меньше</label></span> -->
+      <span class="star-cb-group">
+        <input type="radio" id="rating-5" name="rating" ng-model="vm.search.level" value="5" /><label for="rating-5">5</label>
+        <input type="radio" id="rating-4" name="rating" ng-model="vm.search.level" value="4" checked="checked" /><label for="rating-4">4</label>
+        <input type="radio" id="rating-3" name="rating" ng-model="vm.search.level" value="3" /><label for="rating-3">3</label>
+        <input type="radio" id="rating-2" name="rating" ng-model="vm.search.level" value="2" /><label for="rating-2">2</label>
+        <input type="radio" id="rating-1" name="rating" ng-model="vm.search.level" value="1" /><label for="rating-1">1</label>
+        <input type="radio" id="rating-0" name="rating" value="0" class="star-cb-clear" /><label for="rating-0">0</label>
+      </span>
+
+      <a href="" class="btn btn-default" ng-click="vm.search.level = undefined"><i class="fa fa-remove text-danger"></i></a>
+
+    </div>
+
+    <div ng-show="vm.visibleTasks() === 0">No results</div>
+
+    <table class="table" ng-show="vm.visibleTasks() > 0">
       <thead>
         <tr>
           <th>
-            <a ng-click="vm.changeOrder('title')" href="">Title</a>            
+            <a ng-click="vm.changeOrder('title')" href="">Title</a>
             <i class="fa" ng-class="{
               'fa-sort-amount-desc': vm.orderProp === 'title' && vm.orderReversed,
               'fa-sort-amount-asc': vm.orderProp === 'title' && !vm.orderReversed
@@ -52,6 +74,7 @@
           </th>
           <th></th>
           <th></th>
+          <th></th>
         </tr>
       </thead>
       <tr ng-repeat="task in vm.tasks | filter : vm.search | orderBy : vm.orderProp : vm.orderReversed | limitTo : vm.pagination.perPage : (vm.pagination.page - 1) * vm.pagination.perPage track by $index">
@@ -62,6 +85,9 @@
           <span data-toggle="tooltip" title="{{vm.levelLabel[task.level]}}" tooltip>
             <i class="fa fa-star" ng-repeat="i in vm.range(task.level) track by $index"></i>
           </span>
+        </td>
+        <td>
+            <a href="" ng-repeat="tag in task.tags" ng-click="vm.setTagFilter(tag)">{{tag}}</a>
         </td>
         <td>
           <a class="btn btn-default btn-xs" ng-if="task.repository_link" href="{{task.repository_link}}" target="_blank" title="{{task.repository_link}}" tooltip><i class="fa fa-github fa-2x"></i></a>
