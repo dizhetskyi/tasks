@@ -1,7 +1,15 @@
 <div class="container">
 
   <div class="clearfix">
-    <h3 class="pull-left">Задачи</h3>
+    <div class="pull-left">
+      <h3>Задачи</h3>
+      <span ng-if="auth.isAuthenticated">
+        <a href="" ng-click="vm.onlyMy = !vm.onlyMy" class="btn btn-default btn-xs" ng-class="{'btn-warning': vm.onlyMy}">
+          <i class="fa fa-check" ng-class="{'fa-remove': vm.onlyMy}"></i> Только мои
+        </a>
+      </span>
+    </div>
+    <br>
     <div class="pull-right">
       <br>
       <a href="#/newTask" class="btn btn-success">
@@ -18,26 +26,14 @@
 
   <div ng-if="!vm.loading">
 
-    <div class="clearfix">
-
-      <nav ng-show="vm.pagination.pages > 1">
-        <ul class="pagination">
-          <li ng-repeat="a in vm.range(vm.pagination.pages) track by $index" ng-class="{active: $index === vm.pagination.page - 1}" >
-            <a href="" ng-click="vm.setPaginationPage($index + 1)">{{$index + 1}}</a>
-          </li>
-        </ul>
-      </nav>
-
-    </div>
-
     <input type="text" class="form-control input-lg" ng-model="vm.search.title" placeholder="search by title">
     <br>
 
     <div class="row">
       <div class="col-sm-4 col-md-3">
-        
+
         Сложность: <span ng-if="vm.level > 0"> (<a href="" ng-click="vm.level = undefined"><i class="fa fa-remove text-danger"></i> очистить</a>)</span>
-        
+
         <br/>
 
         <span class="star-cb-group" ng-class="{'only-one': !vm.maxLevel}">
@@ -55,7 +51,7 @@
       </div>
 
       <div class="col-sm-8 col-md-9">
-        
+
         <div ng-if="vm.tags">
           Теги: <span ng-if="vm.activeTags() > 0"> (<a href="" ng-click="vm.resetTags()"><i class="fa fa-remove text-danger"></i> очистить</a>)</span>
           <br/>
@@ -68,11 +64,12 @@
 
     <br>
 
-    <div ng-show="filtered.length === 0">No results</div>
+    <div ng-show="vm.filtered.length === 0">No results</div>
 
-    <table class="table" ng-show="filtered.length > 0">
+    <table class="table" ng-show="vm.filtered.length > 0">
       <thead>
         <tr>
+          <th ng-if="auth.isAuthenticated"></th>
           <th>
             <a ng-click="vm.changeOrder('title')" href="">Title</a>
             <i class="fa" ng-class="{
@@ -92,7 +89,14 @@
           <th></th>
         </tr>
       </thead>
-      <tr ng-repeat="task in filtered = (vm.tasks | filter : vm.search | stars : vm.level : vm.maxLevel | tags : vm.tags | orderBy : vm.orderProp : vm.orderReversed | limitTo : vm.pagination.perPage : (vm.pagination.page - 1) * vm.pagination.perPage) track by $index">
+      <tr ng-repeat="task in (vm.filtered = (vm.tasks | filter : vm.search | onlyMy : vm.onlyMy : auth.userTasks | stars : vm.level : vm.maxLevel | tags : vm.tags | orderBy : vm.orderProp : vm.orderReversed )) | limitTo : vm.pagination.perPage : (vm.pagination.page - 1) * vm.pagination.perPage track by $index">
+
+        <td ng-if="auth.isAuthenticated">
+          <div>
+            <a ng-if="!auth.taskIsAssigned(task._id)" href="" ng-click="auth.assignTask(task._id)" class="add-to-favorite" tooltip title="add to my tasks"><i class="fa"></i><i class="fa plus"></i></a>
+
+            <a ng-if="auth.taskIsAssigned(task._id)" href="" ng-click="auth.dismissTask(task._id)" class="add-to-favorite active" tooltip title="remove from my tasks"><i class="fa"></i></a>
+        </td>
         <td style="font-size: 16px;">
           <a ng-href="#/task/{{task.slug}}">{{task.title}}</a>
         </td>
@@ -114,6 +118,18 @@
         </td>
       </tr>
     </table>
+
+    <div class="clearfix">
+
+      <nav ng-show="vm.pagination.pages > 1">
+        <ul class="pagination">
+          <li ng-repeat="a in vm.range(vm.pagination.pages) track by $index" ng-class="{active: $index === vm.pagination.page - 1}" >
+            <a href="" ng-click="vm.setPaginationPage($index + 1)">{{$index + 1}}</a>
+          </li>
+        </ul>
+      </nav>
+
+    </div>
 
   </div>
 </div>

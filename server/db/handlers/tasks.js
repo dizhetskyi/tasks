@@ -1,5 +1,39 @@
 const db = require('./../config');
 
+const submitSolution = (req, res) => {
+
+  db.User.findOne({login: req.userLogin}).exec().catch(err => {
+    res.json({
+      success: false,
+      erros: err
+    })
+  })
+  .then(user => {
+
+    return db.Task.findByIdAndUpdate(req.params.id, {
+      "$addToSet": {
+        solutions: {
+          sandbox_link: req.body.sandbox_link,
+          user: user._id
+        }
+      }
+    }, {new : true}).exec().catch(err => {
+      res.json({
+        success: false,
+        erros: err
+      })
+    })
+
+  })
+  .then(updatedTask => {
+    console.log('task: ', updatedTask)
+    res.json({
+      success: true
+    })
+  })
+
+}
+
 module.exports = {
 
   getAllTasks: (req, res) => {
@@ -79,6 +113,8 @@ module.exports = {
       });
     })
 
-  }
+  },
+
+  submitSolution
 
 }

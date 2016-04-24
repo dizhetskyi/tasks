@@ -1,0 +1,33 @@
+.add-to-favorite {
+  color: gold;
+  font-size: 20px;
+  position: relative;
+  text-decoration: none;
+
+  &:hover {
+    color: silver;
+  }
+
+  &.active {
+    color: gold;
+    i:before {
+      content: '\f004';
+    }
+  }
+
+  i:before {
+    content: '\f08a';
+  }
+
+  i.plus {
+    font-size: 11px;
+    position: absolute;
+    bottom: -4px;
+    right: -6px;
+  }
+
+  i.plus:before {
+    content: '\f067';
+    color: gray;
+  }
+}

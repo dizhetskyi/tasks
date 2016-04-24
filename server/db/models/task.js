@@ -41,9 +41,18 @@ const taskSchema = new mongoose.Schema({
   ],
   sandbox_link: {
     type: String
-  }
+  },
+  solutions: [
+    {
+      code: String,
+      sandbox_link: String,
+      user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+    }
+  ]
+}, {
+  collection: 't_tasks'
 })
 
-const taskModel = mongoose.model('t_tasks', taskSchema);
+const taskModel = mongoose.model('Task', taskSchema);
 
 module.exports = taskModel;

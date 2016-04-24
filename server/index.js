@@ -4,6 +4,7 @@ const path = require('path');
 const fetch = require('isomorphic-fetch');
 
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const port = 8888;
@@ -22,6 +23,30 @@ var allowCrossDomain = function(req, res, next) {
   next();
 }
 
+function ensureAuthenticated(req, res, next) {
+  if (!req.header('Authorization')) {
+    return res.sendStatus(401).send({ message: 'Please make sure your request has an Authorization header' });
+  }
+  var token = req.header('Authorization').split(' ')[1];
+
+  var payload = null;
+  try {
+    payload = jwt.decode(token, app.get('secret'));
+  }
+  catch (err) {
+    return res.status(401).send({ message: err.message });
+  }
+
+  // TODO moment?
+  // if (payload.exp <= moment().unix()) {
+  //   return res.status(401).send({ message: 'Token has expired' });
+  // }
+
+  req.userLogin = payload.login;
+
+  next();
+}
+
 app.use(allowCrossDomain);
 
 const server = app.listen(port, () => {
@@ -36,6 +61,8 @@ mongoose.connect(db.uri);
 
 // api
 const apiRouter = express.Router();
+
+
 const tasksAPI = require('./db/handlers/tasks');
 
 apiRouter.route('/tasks')
@@ -48,6 +75,22 @@ apiRouter.route('/tasks/:slug')
 apiRouter.route('/tasks/:id')
   .put(tasksAPI.updateTask)
   .delete(tasksAPI.removeTask)
+
+apiRouter.route('/tasks/:id/solutions')
+  .post(ensureAuthenticated, tasksAPI.submitSolution)
+
+
+const usersAPI = require('./db/handlers/users');
+
+apiRouter.route('/user/tasks')
+  .get(ensureAuthenticated, usersAPI.getTasks)
+
+apiRouter.route('/user/assignTask')
+  .post(ensureAuthenticated, usersAPI.assignTask)
+
+apiRouter.route('/user/dismissTask')
+  .post(ensureAuthenticated, usersAPI.dismissTask)
+
 
 app.use('/api', apiRouter);
 
