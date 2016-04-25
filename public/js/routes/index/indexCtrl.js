@@ -2,19 +2,19 @@ import angular from 'angular';
 
 class IndexController {
 
-  constructor($scope, tasksService){
+  constructor($scope, tasksService, usersService){
+
     this.$scope = $scope;
     this.tasksService = tasksService;
+    this.usersService = usersService;
 
     this.tasks = [];
-
+    this.filtered = [];
     this.tags = [];
-    
-    this.loadTasks();
 
-    this.search = {
-      title: undefined
-    }
+    this.onlyMy = false;
+
+    this.loadTasks();
 
     this.maxLevel = true;
 
@@ -28,12 +28,14 @@ class IndexController {
 
     this.pagination = {
       page: 1,
-      pages: 0,
-      perPage: 5
+      pages: 1,
+      perPage: 10
     }
 
     this.orderProp = null;
     this.orderReversed = false;
+
+    this.$scope.$watch(() => this.filtered.length, this.recalcPagination.bind(this));
 
   }
 
@@ -106,16 +108,17 @@ class IndexController {
   }
 
   setTagFilter(newTag){
-    console.log(newTag);
     if (newTag !== this.search.tags){
       this.search.tags = newTag;
     }
   }
 
   recalcPagination(){
-    this.pagination.pages = Math.ceil(this.tasks.length / this.pagination.perPage);
+    this.pagination.pages = Math.ceil(this.filtered.length / this.pagination.perPage);
     if (this.pagination.page > this.pagination.pages){
       this.setPaginationPage(this.pagination.pages);
+    } else if (this.pagination.page === 0){
+      this.setPaginationPage(1);
     }
   }
 
@@ -129,6 +132,6 @@ class IndexController {
 
 }
 
-IndexController.$inject = ['$scope', 'tasksService'];
+IndexController.$inject = ['$scope', 'tasksService', 'usersService'];
 
 export default IndexController;
