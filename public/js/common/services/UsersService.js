@@ -1,30 +1,31 @@
 class UsersService {
-  constructor($http){
+  constructor($http, api_url){
     this.$http = $http;
+    this.api_url = api_url;
   }
 
   assignTask(taskId){
-    return this.$http.post(`http://localhost:8888/api/user/assignTask`, {
+    return this.$http.post(`${this.api_url}/api/user/assignTask`, {
       taskId
     })
   }
 
   dismissTask(taskId){
-    return this.$http.post(`http://localhost:8888/api/user/dismissTask`, {
+    return this.$http.post(`${this.api_url}/api/user/dismissTask`, {
       taskId
     })
   }
 
   getTasks(){
-    return this.$http.get(`http://localhost:8888/api/user/tasks`);
+    return this.$http.get(`${this.api_url}/api/user/tasks`);
   }
 
   submitTaskSolution(id, data){
-    return this.$http.post(`http://localhost:8888/api/tasks/${id}/solutions`, data);
+    return this.$http.post(`${this.api_url}/api/tasks/${id}/solutions`, data);
   }
 
 }
 
-UsersService.$inject = ['$http'];
+UsersService.$inject = ['$http', 'api_url'];
 
 export default UsersService

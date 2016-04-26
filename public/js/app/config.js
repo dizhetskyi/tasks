@@ -1,16 +1,4 @@
-function config($httpProvider, $routeProvider, $authProvider) {
-
-  // $httpProvider.interceptors.push(function($q) {
-  //   return {
-  //     request: function(config) {
-  //       return config;
-  //     },
-  //     response: function(res) {
-  //       console.log(res);
-  //       return res;
-  //     }
-  //   };
-  // });
+function config($httpProvider, $routeProvider, $authProvider, api_url) {
 
   $routeProvider
     .when('/', {
@@ -62,10 +50,10 @@ function config($httpProvider, $routeProvider, $authProvider) {
 
   $authProvider.github({
     clientId: 'e7037ffd60cfd5c102ff',
-    url: 'http://localhost:8888/auth/github'
+    url: `${api_url}/auth/github`
   });
 }
 
-config.$inject = ['$httpProvider', '$routeProvider', '$authProvider'];
+config.$inject = ['$httpProvider', '$routeProvider', '$authProvider', 'api_url'];
 
 export default config;

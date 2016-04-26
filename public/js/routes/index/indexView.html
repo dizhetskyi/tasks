@@ -89,7 +89,7 @@
           <th></th>
         </tr>
       </thead>
-      <tr ng-repeat="task in (vm.filtered = (vm.tasks | filter : vm.search | onlyMy : vm.onlyMy : auth.userTasks | stars : vm.level : vm.maxLevel | tags : vm.tags | orderBy : vm.orderProp : vm.orderReversed )) | limitTo : vm.pagination.perPage : (vm.pagination.page - 1) * vm.pagination.perPage track by $index">
+      <tr ng-repeat="task in (vm.filtered = (vm.tasks | filter : vm.search | onlyMy : vm.onlyMy : auth.userTasks | stars : vm.level : vm.maxLevel | tags : vm.tags )) | orderBy : vm.orderProp : vm.orderReversed | limitTo : vm.pagination.perPage : (vm.pagination.page - 1) * vm.pagination.perPage track by $index">
 
         <td ng-if="auth.isAuthenticated">
           <div>

@@ -51,7 +51,7 @@ module.exports = {
                     firstname: createdUser.firstname,
                     lastname: createdUser.lastname
                   }, secret, {
-                    expiresIn: 360
+                    expiresIn: 365
                   });
 
                   res.json({

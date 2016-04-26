@@ -30,4 +30,6 @@ const app = angular.module('app', [
   filters
 ]);
 
+app.constant('api_url', 'http://10.10.4.166:8888');
+
 app.config(config);
